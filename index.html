@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据结构笔记</title>
+  <link rel="stylesheet" href="vendor/hljs-light.css" id="hljs-light">
+  <link rel="stylesheet" href="vendor/hljs-dark.css" id="hljs-dark" disabled>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <button id="menu-btn" class="icon-btn" type="button" aria-label="打开目录">☰</button>
+    <a class="brand" href="#/">数据结构笔记</a>
+    <div class="spacer"></div>
+    <a class="luogu-link" href="https://www.luogu.com.cn/training/113" target="_blank" rel="noopener noreferrer">
+      洛谷 · 数据结构题单 ↗
+    </a>
+    <button id="theme-btn" class="icon-btn" type="button" aria-label="切换深浅主题">◐</button>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="search">
+        <input id="search" type="search" placeholder="搜索标题 / 标签…" autocomplete="off">
+      </div>
+      <nav id="note-list" class="note-list" aria-label="笔记目录"></nav>
+      <div class="sidebar-footer">
+        <button id="upload-btn" class="btn ghost" type="button" hidden>↑ 上传 .md</button>
+        <input id="file-input" type="file" accept=".md,text/markdown" multiple hidden>
+        <a class="btn ghost" href="#/new">＋ 新建笔记</a>
+        <a class="btn ghost span-2" href="https://www.luogu.com.cn/ide" target="_blank" rel="noopener noreferrer">洛谷 IDE ↗</a>
+        <p id="mode-note" class="mode-note"></p>
+      </div>
+    </aside>
+
+    <main id="main"></main>
+  </div>
+
+  <script src="vendor/marked.min.js"></script>
+  <script src="vendor/purify.min.js"></script>
+  <script src="vendor/highlight.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
