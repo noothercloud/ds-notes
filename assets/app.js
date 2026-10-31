@@ -150,14 +150,23 @@ async function checkApi() {
   }
 }
 
+function isLocalHost() {
+  return location.hostname === '127.0.0.1' || location.hostname === 'localhost';
+}
+
 function updateApiUi() {
   const uploadBtn = $('#upload-btn');
   if (uploadBtn) uploadBtn.hidden = !state.api;
+
+  /* 公网镜像上隐藏本机操作入口 */
+  const newBtn = $('#new-note-btn');
+  if (newBtn) newBtn.hidden = !state.api && !isLocalHost();
+
   const modeNote = $('#mode-note');
   if (!modeNote) return;
   if (state.api) {
     modeNote.textContent = '';
-  } else if (location.hostname === '127.0.0.1' || location.hostname === 'localhost') {
+  } else if (isLocalHost()) {
     modeNote.textContent = '只读模式：运行 python3 serve.py 后可上传、删除。';
   } else {
     modeNote.textContent = '公网只读镜像：修改请在本机的 ds-notes 里进行。';
@@ -306,6 +315,7 @@ function homeCard(title, desc, href, external) {
 function renderHome() {
   const main = $('#main');
   main.innerHTML = '';
+  const mirror = !state.api && !isLocalHost();
 
   const article = make('article', 'article');
 
@@ -322,19 +332,28 @@ function renderHome() {
 
   const grid = make('div', 'home-grid');
   grid.appendChild(homeCard('洛谷 · 数据结构题单', '训练题单 #113，新标签页打开', 'https://www.luogu.com.cn/training/113', true));
-  grid.appendChild(homeCard('＋ 新建笔记', '在页面里写 Markdown，下载成 .md', '#/new', false));
+  if (!mirror) {
+    grid.appendChild(homeCard('＋ 新建笔记', '在页面里写 Markdown，下载成 .md', '#/new', false));
+  }
   grid.appendChild(homeCard('洛谷 IDE', '在线编译调试 C++', 'https://www.luogu.com.cn/ide', true));
   article.appendChild(grid);
 
   const how = make('section', 'home-how');
-  how.appendChild(make('h2', null, '把笔记存进站点'));
+  how.appendChild(make('h2', null, mirror ? '关于这个公网镜像' : '把笔记存进站点'));
   const ol = make('ol');
-  [
-    '点左侧「↑ 上传 .md」，可一次选多篇（需用 python3 serve.py 启动）。',
-    '或点「新建笔记」写 Markdown，下载后放进 notes/ 目录。',
-    '上传、删除都会自动重建清单；只有直接在文件夹里改 .md 时，才需要运行 python3 tools/build_index.py。',
-    '打开笔记页，右上角「删除笔记」可删除，删除前会二次确认。',
-  ].forEach((t) => ol.appendChild(make('li', null, t)));
+  const steps = mirror
+    ? [
+      '这里是只读镜像，内容由本机的 ds-notes 发布。',
+      '新增、修改、删除请在本机操作，公网页面不能写入。',
+      '本机改完后双击「发布到公网.command」，约 1 分钟同步到这里。',
+    ]
+    : [
+      '点左侧「↑ 上传 .md」，可一次选多篇（需用 python3 serve.py 启动）。',
+      '或点「新建笔记」写 Markdown，下载后放进 notes/ 目录。',
+      '上传、删除都会自动重建清单；只有直接在文件夹里改 .md 时，才需要运行 python3 tools/build_index.py。',
+      '打开笔记页，右上角「删除笔记」可删除，删除前会二次确认。',
+    ];
+  steps.forEach((t) => ol.appendChild(make('li', null, t)));
   how.appendChild(ol);
   article.appendChild(how);
 
@@ -393,9 +412,11 @@ async function renderNote(slug) {
   }
 
   const actions = make('div', 'note-actions');
-  const editLink = make('a', 'btn ghost', '编辑此笔记');
-  editLink.href = '#/edit/' + encodeURIComponent(slug);
-  actions.appendChild(editLink);
+  if (state.api || isLocalHost()) {
+    const editLink = make('a', 'btn ghost', '编辑此笔记');
+    editLink.href = '#/edit/' + encodeURIComponent(slug);
+    actions.appendChild(editLink);
+  }
 
   if (state.api && note) {
     const delBtn = make('button', 'btn danger', '删除笔记');
