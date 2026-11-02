@@ -14,6 +14,16 @@
       "updated": "2026-11-01"
     },
     {
+      "slug": "2-线性表与顺序表",
+      "file": "2-线性表与顺序表.md",
+      "title": "2.线性表与顺序表",
+      "tags": [
+        "线性表",
+        "顺序表"
+      ],
+      "updated": "2026-11-02"
+    },
+    {
       "slug": "segment-tree",
       "file": "segment-tree.md",
       "title": "线段树入门",
